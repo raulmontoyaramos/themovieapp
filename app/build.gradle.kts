@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -57,6 +57,11 @@ dependencies {
     //Arrow
     implementation(libs.arrow.core)
     implementation(libs.arrow.fx)
+
+    //Room
+    implementation(libs.roomRuntime)
+    ksp(libs.roomCompiler)
+    implementation(libs.roomKtx)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
