@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.imageLoader
 import com.raul.themovieapp.data.network.KtorNetworkService
 import com.raul.themovieapp.presentation.PopularMoviesViewModel
@@ -56,12 +56,13 @@ class MainActivity : ComponentActivity() {
             TheMovieAppTheme {
                 val imageLoader =
                     LocalContext.current.imageLoader.newBuilder().okHttpClient(okHttpClient).build()
-                val viewModel =
-                    viewModel<PopularMoviesViewModel>(factory = viewModelFactory {
+                val viewModel by viewModels<PopularMoviesViewModel> {
+                    viewModelFactory {
                         PopularMoviesViewModel(
                             networkService = networkService
                         )
-                    })
+                    }
+                }
                 val viewState = viewModel.viewState.collectAsState().value
                 PopularMoviesScreen(viewState, imageLoader)
             }
