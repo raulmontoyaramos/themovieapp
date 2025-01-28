@@ -58,3 +58,13 @@ data class PopularMoviesViewState(
     val isLoading: Boolean,
     val isError: Boolean,
 )
+
+class PopularMoviesViewModelFactory(
+    private val networkService: NetworkService
+) {
+    internal fun create() = viewModelFactory {
+        PopularMoviesViewModel(
+            networkService = networkService
+        )
+    }
+}

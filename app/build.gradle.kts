@@ -65,6 +65,11 @@ dependencies {
 
     //Coil
     implementation(libs.coil.compose)
+    implementation(libs.coil.network)
+
+    //Dagger
+    implementation(libs.dagger)
+    ksp(libs.daggerCompiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

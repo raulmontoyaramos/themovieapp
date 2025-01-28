@@ -7,5 +7,5 @@ interface NetworkService {
 
     suspend fun getPopularMovies(): Either<Error, List<Movie>>
 
-    object Error
+    data class Error(val message: String)
 }

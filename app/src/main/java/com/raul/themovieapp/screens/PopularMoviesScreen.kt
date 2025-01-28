@@ -35,10 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
-import coil.compose.SubcomposeAsyncImage
-import coil.imageLoader
-import coil.request.ImageRequest
+import coil3.compose.SubcomposeAsyncImage
+import coil3.request.ImageRequest
 import com.raul.themovieapp.domain.model.Movie
 import com.raul.themovieapp.presentation.PopularMoviesViewState
 import java.time.LocalDate
@@ -46,8 +44,7 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PopularMoviesScreen(
-    viewState: PopularMoviesViewState,
-    imageLoader: ImageLoader
+    viewState: PopularMoviesViewState
 ) {
     Scaffold(
         topBar = {
@@ -71,8 +68,7 @@ fun PopularMoviesScreen(
 
                 else ->
                     MoviesGrid(
-                        viewState = viewState,
-                        imageLoader = imageLoader
+                        viewState = viewState
                     )
             }
         }
@@ -82,8 +78,7 @@ fun PopularMoviesScreen(
 
 @Composable
 fun MoviesGrid(
-    viewState: PopularMoviesViewState,
-    imageLoader: ImageLoader
+    viewState: PopularMoviesViewState
 ) {
     LazyVerticalGrid(
         modifier = Modifier.fillMaxWidth(),
@@ -92,8 +87,7 @@ fun MoviesGrid(
         content = {
             items(viewState.movies) { movie ->
                 MovieCard(
-                    movie = movie,
-                    imageLoader = imageLoader
+                    movie = movie
                 )
             }
         })
@@ -175,8 +169,7 @@ fun Empty(subject: String) {
 
 @Composable
 fun MovieCard(
-    movie: Movie,
-    imageLoader: ImageLoader
+    movie: Movie
 ) {
     Card(
         modifier = Modifier
@@ -184,23 +177,23 @@ fun MovieCard(
             .background(color = Color.White),
         shape = RoundedCornerShape(10.dp)
     ) {
-        Column(
-            modifier = Modifier
-        ) {
-            val data = "https://api.themoviedb.org/3" + movie.posterPath
+        Column {
+            val data = "https://image.tmdb.org/t/p/original" + movie.posterPath
             println("URL = $data")
             println("Movie = $movie")
             SubcomposeAsyncImage(
-                imageLoader = imageLoader,
+//                imageLoader = imageLoader,
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(data)
-                    .crossfade(true)
                     .build(),
-                contentDescription = null,
+                contentDescription = movie.title,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp),
+                onError = {
+                    println("error loading image: ${it.result}")
+                }
             )
             Spacer(modifier = Modifier.height(10.dp))
             val lineHeight = MaterialTheme.typography.bodyMedium.fontSize * 4 / 3
@@ -231,8 +224,7 @@ fun LoadingScreenPreview() {
             movies = emptyList(),
             isLoading = true,
             isError = false
-        ),
-        imageLoader = LocalContext.current.imageLoader
+        )
     )
 }
 
@@ -244,8 +236,7 @@ fun ErrorScreenPreview() {
             movies = emptyList(),
             isLoading = false,
             isError = true
-        ),
-        imageLoader = LocalContext.current.imageLoader
+        )
     )
 }
 
@@ -257,8 +248,7 @@ fun EmptyScreenPreview() {
             movies = emptyList(),
             isLoading = false,
             isError = false
-        ),
-        imageLoader = LocalContext.current.imageLoader
+        )
     )
 }
 
@@ -293,7 +283,6 @@ fun SuccessScreenPreview() {
             ),
             isLoading = false,
             isError = false
-        ),
-        imageLoader = LocalContext.current.imageLoader
+        )
     )
 }
