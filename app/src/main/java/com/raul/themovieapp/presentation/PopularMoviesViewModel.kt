@@ -2,17 +2,22 @@ package com.raul.themovieapp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import arrow.core.Either
-import com.raul.themovieapp.domain.NetworkService
 import com.raul.themovieapp.domain.model.Movie
+import com.raul.themovieapp.domain.usecase.ObserveMoviesUseCase
+import com.raul.themovieapp.domain.usecase.SyncMoviesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class PopularMoviesViewModel(
-    val networkService: NetworkService
+    val syncMoviesUseCase: SyncMoviesUseCase,
+    val observeMoviesUseCase: ObserveMoviesUseCase
 ) : ViewModel() {
 
     val viewState = MutableStateFlow(
@@ -24,13 +29,44 @@ class PopularMoviesViewModel(
     )
 
     init {
+        syncMovies()
+
+
+//        viewModelScope.launch {
+//            val result: Either<NetworkService.Error, List<Movie>> = withContext(Dispatchers.IO) {
+//                networkService.getPopularMovies()
+//            }
+//            result.fold(
+//                ifLeft = { error ->
+//                    println("Error: $error")
+//                    viewState.update {
+//                        it.copy(
+//                            isLoading = false,
+//                            isError = true
+//                        )
+//                    }
+//                },
+//                ifRight = { movies ->
+//                    println("success: $movies")
+//                    viewState.update {
+//                        it.copy(
+//                            movies = movies,
+//                            isLoading = false
+//                        )
+//                    }
+//                }
+//            )
+//        }
+    }
+
+    private fun syncMovies() {
         viewModelScope.launch {
-            val result: Either<NetworkService.Error, List<Movie>> = withContext(Dispatchers.IO) {
-                networkService.getPopularMovies()
+            val resultsync = withContext(Dispatchers.IO) {
+                syncMoviesUseCase.run()
             }
-            result.fold(
-                ifLeft = { error ->
-                    println("Error: $error")
+            resultsync.fold(
+                ifLeft = {
+                    println("SyncMoviesUseCase - Error")
                     viewState.update {
                         it.copy(
                             isLoading = false,
@@ -38,14 +74,18 @@ class PopularMoviesViewModel(
                         )
                     }
                 },
-                ifRight = { movies ->
-                    println("success: $movies")
-                    viewState.update {
-                        it.copy(
-                            movies = movies,
-                            isLoading = false
-                        )
-                    }
+                ifRight = {
+                    observeMoviesUseCase.observe()
+                        .flowOn(Dispatchers.IO)
+                        .catch { println("Error ${it.message}") }
+                        .onEach { movies ->
+                            viewState.update {
+                                it.copy(
+                                    movies = movies,
+                                    isLoading = false
+                                )
+                            }
+                        }.launchIn(viewModelScope)
                 }
             )
         }
@@ -60,11 +100,13 @@ data class PopularMoviesViewState(
 )
 
 class PopularMoviesViewModelFactory(
-    private val networkService: NetworkService
+    private val syncMoviesUseCase: SyncMoviesUseCase,
+    private val observeMoviesUseCase: ObserveMoviesUseCase
 ) {
     internal fun create() = viewModelFactory {
         PopularMoviesViewModel(
-            networkService = networkService
+            syncMoviesUseCase = syncMoviesUseCase,
+            observeMoviesUseCase = observeMoviesUseCase
         )
     }
 }

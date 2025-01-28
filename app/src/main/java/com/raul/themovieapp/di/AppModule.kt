@@ -2,9 +2,13 @@ package com.raul.themovieapp.di
 
 import android.app.Application
 import androidx.room.Room
+import com.raul.themovieapp.data.database.datasource.RoomMovieLocalDataSource
 import com.raul.themovieapp.data.network.KtorNetworkService
 import com.raul.themovieapp.domain.NetworkService
 import com.raul.themovieapp.domain.database.TheMovieAppDatabase
+import com.raul.themovieapp.domain.datasource.MovieLocalDataSource
+import com.raul.themovieapp.domain.usecase.ObserveMoviesUseCase
+import com.raul.themovieapp.domain.usecase.SyncMoviesUseCase
 import com.raul.themovieapp.presentation.PopularMoviesViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -46,7 +50,24 @@ class AppModule(private val application: Application) {
     ): NetworkService = KtorNetworkService(client)
 
     @Provides
+    fun providesMovieLocalDataSource(
+        database: TheMovieAppDatabase
+    ): MovieLocalDataSource = RoomMovieLocalDataSource(database.movieDao())
+
+    @Provides
+    fun providesSyncMoviesUseCase(
+        networkService: NetworkService,
+        movieLocalDataSource: MovieLocalDataSource
+    ): SyncMoviesUseCase = SyncMoviesUseCase(networkService, movieLocalDataSource)
+
+    @Provides
+    fun providesObserveMoviesUseCase(
+        movieLocalDataSource: MovieLocalDataSource
+    ): ObserveMoviesUseCase = ObserveMoviesUseCase(movieLocalDataSource)
+
+    @Provides
     fun providesPopularMoviesViewModelFactory(
-        networkService: NetworkService
-    ): PopularMoviesViewModelFactory = PopularMoviesViewModelFactory(networkService)
+        syncMoviesUseCase: SyncMoviesUseCase,
+        observeMoviesUseCase: ObserveMoviesUseCase
+    ): PopularMoviesViewModelFactory = PopularMoviesViewModelFactory(syncMoviesUseCase, observeMoviesUseCase)
 }

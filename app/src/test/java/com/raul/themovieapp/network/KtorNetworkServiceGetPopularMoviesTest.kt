@@ -4,7 +4,7 @@ import arrow.core.left
 import arrow.core.right
 import com.raul.themovieapp.KtorTestRule
 import com.raul.themovieapp.data.network.KtorNetworkService
-import com.raul.themovieapp.domain.NetworkService
+import com.raul.themovieapp.domain.NetworkError
 import com.raul.themovieapp.domain.model.Movie
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -84,7 +84,7 @@ class KtorNetworkServiceGetPopularMoviesTest {
     @Test
     fun `after non 200 should return error`() = runTest {
         val networkService = KtorNetworkService(networkTestRule.serverWithResponse(401))
-        networkService.getPopularMovies() shouldEqual NetworkService.Error.left()
+        networkService.getPopularMovies() shouldEqual NetworkError.UnknownError.left()
     }
 
     @Test
@@ -122,6 +122,6 @@ class KtorNetworkServiceGetPopularMoviesTest {
         """.trimIndent()
 
         val networkService = KtorNetworkService(networkTestRule.serverWithResponse(200, json))
-        networkService.getPopularMovies() shouldEqual NetworkService.Error.left()
+        networkService.getPopularMovies() shouldEqual NetworkError.DeserialisationError.left()
     }
 }

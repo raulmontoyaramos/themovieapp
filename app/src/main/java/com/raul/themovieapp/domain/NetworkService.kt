@@ -5,7 +5,10 @@ import com.raul.themovieapp.domain.model.Movie
 
 interface NetworkService {
 
-    suspend fun getPopularMovies(): Either<Error, List<Movie>>
+    suspend fun getPopularMovies(): Either<NetworkError, List<Movie>>
+}
 
-    data class Error(val message: String)
+sealed class NetworkError {
+    data object DeserialisationError : NetworkError()
+    data object UnknownError : NetworkError()
 }
