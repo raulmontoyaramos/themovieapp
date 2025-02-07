@@ -31,7 +31,7 @@ class KtorNetworkService(
     }
 
     override suspend fun getMovieDetails(id: Int): Either<NetworkError, MovieDetails> {
-        val response = client.safeGet("movie/${id.toString()}?language=en-US")
+        val response = client.safeGet("movie/$id?language=en-US")
 
         return when (response.status.value) {
             200 -> response.safeReceive(NetworkMovieDetail.serializer())
@@ -43,7 +43,7 @@ class KtorNetworkService(
     }
 
     override suspend fun getVideos(id: Int): Either<NetworkError, List<Video>> {
-        val response = client.safeGet("movie/${id.toString()}/videos?language=en-US")
+        val response = client.safeGet("movie/$id/videos?language=en-US")
 
         return when (response.status.value) {
             200 -> response.safeReceive(NetworkVideos.serializer())
