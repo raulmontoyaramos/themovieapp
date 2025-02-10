@@ -68,6 +68,7 @@ internal fun NetworkMovie.toDomain(): Either<Throwable, Movie> =
             popularity = popularity,
             posterPath = posterPath,
             releaseDate = Either.catch { LocalDate.parse(releaseDate) }.bind(),
+            runtime = null,
             title = title,
             video = video,
             voteAverage = voteAverage,

@@ -14,4 +14,10 @@ interface MovieDao {
 
     @Query("SELECT * FROM movies ORDER BY title ASC")
     fun getAllMovies(): Flow<List<MovieEntity>>
+
+    @Query("SELECT * FROM movies WHERE id = :id")
+    fun getMovieById(id: Int): MovieEntity?
+
+    @Query("UPDATE movies SET runtime = :runtime WHERE id = :id")
+    suspend fun updateMovie(id: Int, runtime: Int?)
 }
