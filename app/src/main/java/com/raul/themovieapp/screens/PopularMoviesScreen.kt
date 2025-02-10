@@ -35,7 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.raul.themovieapp.domain.model.Movie
 import com.raul.themovieapp.presentation.PopularMoviesViewState
@@ -181,7 +181,7 @@ fun MovieCard(
             val data = "https://image.tmdb.org/t/p/original" + movie.posterPath
             println("URL = $data")
             println("Movie = $movie")
-            SubcomposeAsyncImage(
+            AsyncImage(
 //                imageLoader = imageLoader,
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(data)
@@ -191,9 +191,6 @@ fun MovieCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp),
-                onError = {
-                    println("error loading image: ${it.result}")
-                }
             )
             Spacer(modifier = Modifier.height(10.dp))
             val lineHeight = MaterialTheme.typography.bodyMedium.fontSize * 4 / 3
