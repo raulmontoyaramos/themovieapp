@@ -30,33 +30,6 @@ class PopularMoviesViewModel(
 
     init {
         syncMovies()
-
-
-//        viewModelScope.launch {
-//            val result: Either<NetworkService.Error, List<Movie>> = withContext(Dispatchers.IO) {
-//                networkService.getPopularMovies()
-//            }
-//            result.fold(
-//                ifLeft = { error ->
-//                    println("Error: $error")
-//                    viewState.update {
-//                        it.copy(
-//                            isLoading = false,
-//                            isError = true
-//                        )
-//                    }
-//                },
-//                ifRight = { movies ->
-//                    println("success: $movies")
-//                    viewState.update {
-//                        it.copy(
-//                            movies = movies,
-//                            isLoading = false
-//                        )
-//                    }
-//                }
-//            )
-//        }
     }
 
     private fun syncMovies() {
@@ -90,7 +63,6 @@ class PopularMoviesViewModel(
             )
         }
     }
-
 }
 
 data class PopularMoviesViewState(
