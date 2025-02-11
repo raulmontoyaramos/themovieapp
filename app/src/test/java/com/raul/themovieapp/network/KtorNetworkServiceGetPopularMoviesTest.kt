@@ -71,6 +71,7 @@ class KtorNetworkServiceGetPopularMoviesTest {
                 popularity = 5481.159,
                 posterPath = "/1GvBhRxY6MELDfxFrete6BNhBB5.jpg",
                 releaseDate = LocalDate.parse("2024-12-11"),
+                runtime = null,
                 title = "Kraven the Hunter",
                 video = false,
                 voteAverage = 6.5,

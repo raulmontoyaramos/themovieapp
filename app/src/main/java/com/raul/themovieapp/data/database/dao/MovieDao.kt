@@ -16,8 +16,8 @@ interface MovieDao {
     fun getAllMovies(): Flow<List<MovieEntity>>
 
     @Query("SELECT * FROM movies WHERE id = :id")
-    fun getMovieById(id: Int): MovieEntity?
+    fun getMovieById(id: Int): Flow<MovieEntity?>
 
     @Query("UPDATE movies SET runtime = :runtime WHERE id = :id")
-    suspend fun updateMovie(id: Int, runtime: Int?)
+    suspend fun updateMovie(id: Int, runtime: Int)
 }

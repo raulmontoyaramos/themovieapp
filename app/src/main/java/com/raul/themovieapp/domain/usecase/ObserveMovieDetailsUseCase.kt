@@ -4,8 +4,7 @@ import com.raul.themovieapp.domain.datasource.MovieLocalDataSource
 
 class ObserveMovieDetailsUseCase(
     private val movieLocalDataSource: MovieLocalDataSource,
-    private val id: Int
 ) {
-    fun observe() =
+    fun observe(id: Int) =
         movieLocalDataSource.getMovieById(id)
 }

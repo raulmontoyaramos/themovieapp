@@ -49,11 +49,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.raul.themovieapp.domain.model.Cast
-import com.raul.themovieapp.domain.model.Genre
-import com.raul.themovieapp.domain.model.MovieDetails
-import com.raul.themovieapp.domain.model.ProductionCompany
-import com.raul.themovieapp.domain.model.ProductionCountry
-import com.raul.themovieapp.domain.model.SpokenLanguage
+import com.raul.themovieapp.domain.model.Movie
 import com.raul.themovieapp.presentation.MovieDetailsViewState
 import com.raul.themovieapp.utils.formattedYear
 import com.raul.themovieapp.utils.minuteToTime
@@ -73,7 +69,7 @@ fun MovieDetailsScreen(viewState: MovieDetailsViewState) {
                 .fillMaxSize()
         ) {
             LazyColumn(content = {
-                viewState.movieDetails?.let {
+                viewState.movie?.let {
                     item { ItemPoster(it) }
                     item { ItemTitle(it) }
                     item { ItemOverview(it) }
@@ -85,11 +81,11 @@ fun MovieDetailsScreen(viewState: MovieDetailsViewState) {
 }
 
 @Composable
-fun ItemPoster(movieDetails: MovieDetails) {
+fun ItemPoster(movie: Movie) {
     Box(modifier = Modifier.padding(horizontal = 15.dp)) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data("https://image.tmdb.org/t/p/original" + movieDetails.backdropPath)
+                .data("https://image.tmdb.org/t/p/original" + movie.backdropPath)
                 .crossfade(true)
                 .build(),
             contentDescription = "Image",
@@ -102,7 +98,7 @@ fun ItemPoster(movieDetails: MovieDetails) {
         )
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data("https://image.tmdb.org/t/p/original" + movieDetails.posterPath)
+                .data("https://image.tmdb.org/t/p/original" + movie.posterPath)
                 .crossfade(true).build(),
             contentDescription = "Image",
             contentScale = ContentScale.FillBounds,
@@ -116,12 +112,12 @@ fun ItemPoster(movieDetails: MovieDetails) {
 }
 
 @Composable
-fun ItemTitle(movieDetails: MovieDetails) {
+fun ItemTitle(movie: Movie) {
 
     Spacer(modifier = Modifier.height(20.dp))
 
-    val title = movieDetails.title
-    val year = formattedYear(movieDetails.releaseDate.toString())
+    val title = movie.title
+    val year = formattedYear(movie.releaseDate.toString())
 
     Text(
         text = buildAnnotatedString {
@@ -152,9 +148,9 @@ fun ItemTitle(movieDetails: MovieDetails) {
             modifier = Modifier.padding(end = 10.dp)
         )
 
-        val originalLanguage = "(${movieDetails.originalLanguage.uppercase()})"
+        val originalLanguage = "(${movie.originalLanguage.uppercase()})"
         Text(
-            text = "${movieDetails.releaseDate} $originalLanguage ${movieDetails.runtime?.minuteToTime() ?: "Unknown duration"}",
+            text = "${movie.releaseDate} $originalLanguage ${movie.runtime?.minuteToTime() ?: "Unknown duration"}",
             style = MaterialTheme.typography.bodyMedium,
             maxLines = 1,
             modifier = Modifier.padding(end = 10.dp)
@@ -164,14 +160,14 @@ fun ItemTitle(movieDetails: MovieDetails) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
     ) {
-        val concatenatedGenres: String = movieDetails.genres.joinToString(", ") { it.name }
-        Text(
-            text = concatenatedGenres,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+//        val concatenatedGenres: String = movie.genres.joinToString(", ") { it.name }
+//        Text(
+//            text = concatenatedGenres,
+//            style = MaterialTheme.typography.bodyMedium,
+//            color = Color.Gray,
+//            maxLines = 1,
+//            overflow = TextOverflow.Ellipsis
+//        )
     }
 
     Spacer(modifier = Modifier.height(10.dp))
@@ -183,7 +179,7 @@ fun ItemTitle(movieDetails: MovieDetails) {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        CircularProgress((movieDetails.voteAverage.toFloat().div(10)))
+        CircularProgress((movie.voteAverage.toFloat().div(10)))
 
         Text(
             text = "User Score",
@@ -226,7 +222,7 @@ fun ItemTitle(movieDetails: MovieDetails) {
 }
 
 @Composable
-fun ItemOverview(movieDetails: MovieDetails) {
+fun ItemOverview(movie: Movie) {
     Spacer(modifier = Modifier.height(15.dp))
     Text(
         text = "Overview",
@@ -237,7 +233,7 @@ fun ItemOverview(movieDetails: MovieDetails) {
     Spacer(modifier = Modifier.height(10.dp))
     val lineHeight = MaterialTheme.typography.bodyLarge.fontSize * 4 / 3
     Text(
-        text = movieDetails.overview,
+        text = movie.overview,
         style = MaterialTheme.typography.bodyLarge,
         lineHeight = lineHeight,
         modifier = Modifier.padding(horizontal = 15.dp)
@@ -350,60 +346,18 @@ fun MovieCastCard(cast: Cast) {
 @Composable
 fun MovieDetailsScreenPreview() {
     val viewState = MovieDetailsViewState(
-        movieDetails = MovieDetails(
+        movie = Movie(
             adult = false,
             backdropPath = "/v9Du2HC3hlknAvGlWhquRbeifwW.jpg",
-            belongsToCollection = null,
-            budget = 120000000,
-            genres = listOf(
-                Genre(id = 28, name = "Action"),
-                Genre(id = 878, name = "Science Fiction"),
-                Genre(id = 12, name = "Adventure"),
-                Genre(id = 14, name = "Fantasy"),
-                Genre(id = 53, name = "Thriller")
-            ),
-            homepage = "https://www.kravenmovie.com",
+            genreIds = emptyList(),
             id = 539972,
-            imdbId = "tt8790086",
-            originCountry = listOf("US"),
             originalLanguage = "en",
             originalTitle = "Kraven the Hunter",
             overview = "Kraven Kravinoff's complex relationship with his ruthless gangster father, Nikolai, starts him down a path of vengeance with brutal consequences, motivating him to become not only the greatest hunter in the world, but also one of its most feared.",
             popularity = 2600.343,
             posterPath = "/i47IUSsN126K11JUzqQIOi1Mg1M.jpg",
-            productionCompanies = listOf(
-                ProductionCompany(
-                    id = 5,
-                    logoPath = "/71BqEFAF4V3qjjMPCpLuyJFB9A.png",
-                    name = "Columbia Pictures",
-                    originCountry = "US"
-                ),
-                ProductionCompany(
-                    id = 53462,
-                    logoPath = "/nx8B3Phlcse02w86RW4CJqzCnfL.png",
-                    name = "Matt Tolmach Productions",
-                    originCountry = "US"
-                ),
-                ProductionCompany(
-                    id = 14439,
-                    logoPath = null,
-                    name = "Arad Productions",
-                    originCountry = "US"
-                )
-            ),
-            productionCountries = listOf(
-                ProductionCountry(iso31661 = "US", name = "United States of America")
-            ),
             releaseDate = LocalDate.parse("2024-12-11"),
-            revenue = 59184643,
             runtime = 127,
-            spokenLanguages = listOf(
-                SpokenLanguage(englishName = "English", iso6391 = "en", name = "English"),
-                SpokenLanguage(englishName = "Russian", iso6391 = "ru", name = "Pусский"),
-                SpokenLanguage(englishName = "Turkish", iso6391 = "tr", name = "Türkçe")
-            ),
-            status = "Released",
-            tagline = "Villains aren't born. They're made.",
             title = "Kraven the Hunter",
             video = false,
             voteAverage = 6.6,

@@ -7,8 +7,11 @@ import com.raul.themovieapp.data.network.KtorNetworkService
 import com.raul.themovieapp.domain.NetworkService
 import com.raul.themovieapp.domain.database.TheMovieAppDatabase
 import com.raul.themovieapp.domain.datasource.MovieLocalDataSource
+import com.raul.themovieapp.domain.usecase.ObserveMovieDetailsUseCase
 import com.raul.themovieapp.domain.usecase.ObserveMoviesUseCase
+import com.raul.themovieapp.domain.usecase.SyncMovieDetailsUseCase
 import com.raul.themovieapp.domain.usecase.SyncMoviesUseCase
+import com.raul.themovieapp.presentation.MovieDetailsViewModelFactory
 import com.raul.themovieapp.presentation.PopularMoviesViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -66,8 +69,25 @@ class AppModule(private val application: Application) {
     ): ObserveMoviesUseCase = ObserveMoviesUseCase(movieLocalDataSource)
 
     @Provides
+    fun providesSyncMovieDetailsUseCase(
+        networkService: NetworkService,
+        movieLocalDataSource: MovieLocalDataSource
+    ): SyncMovieDetailsUseCase = SyncMovieDetailsUseCase(networkService, movieLocalDataSource)
+
+    @Provides
+    fun providesObserveMovieDetailsUseCase(
+        movieLocalDataSource: MovieLocalDataSource
+    ): ObserveMovieDetailsUseCase = ObserveMovieDetailsUseCase(movieLocalDataSource)
+
+    @Provides
     fun providesPopularMoviesViewModelFactory(
         syncMoviesUseCase: SyncMoviesUseCase,
         observeMoviesUseCase: ObserveMoviesUseCase
     ): PopularMoviesViewModelFactory = PopularMoviesViewModelFactory(syncMoviesUseCase, observeMoviesUseCase)
+
+    @Provides
+    fun providesMovieDetailsViewModelFactory(
+        syncMovieDetailsUseCase: SyncMovieDetailsUseCase,
+        observeMovieDetailsUseCase: ObserveMovieDetailsUseCase
+    ): MovieDetailsViewModelFactory = MovieDetailsViewModelFactory(syncMovieDetailsUseCase, observeMovieDetailsUseCase)
 }

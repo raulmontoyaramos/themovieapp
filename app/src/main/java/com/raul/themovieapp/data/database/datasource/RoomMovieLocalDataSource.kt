@@ -16,10 +16,10 @@ class RoomMovieLocalDataSource(private val movieDao: MovieDao): MovieLocalDataSo
     override fun getAllMovies(): Flow<List<Movie>> =
         movieDao.getAllMovies().map { it.map { it.toDomain() } }
 
-    override fun getMovieById(id: Int): Movie? =
-        movieDao.getMovieById(id)?.toDomain()
+    override fun getMovieById(id: Int): Flow<Movie?> =
+        movieDao.getMovieById(id).map { it?.toDomain() }
 
-    override suspend fun updateMovie(id: Int, runtime: Int?) =
+    override suspend fun updateMovie(id: Int, runtime: Int) =
         movieDao.updateMovie(id, runtime)
 
 

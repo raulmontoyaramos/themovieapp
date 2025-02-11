@@ -8,7 +8,7 @@ interface MovieLocalDataSource {
 
     fun getAllMovies(): Flow<List<Movie>>
 
-    fun getMovieById(id: Int): Movie?
+    fun getMovieById(id: Int): Flow<Movie?>
 
-    suspend fun updateMovie(id: Int, runtime: Int?)
+    suspend fun updateMovie(id: Int, runtime: Int)
 }
