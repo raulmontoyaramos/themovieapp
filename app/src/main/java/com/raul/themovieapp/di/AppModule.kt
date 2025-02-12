@@ -2,10 +2,14 @@ package com.raul.themovieapp.di
 
 import android.app.Application
 import androidx.room.Room
+import com.raul.themovieapp.data.database.datasource.RoomGenreLocalDataSource
+import com.raul.themovieapp.data.database.datasource.RoomMovieGenreCrossRefLocalDataSource
 import com.raul.themovieapp.data.database.datasource.RoomMovieLocalDataSource
 import com.raul.themovieapp.data.network.KtorNetworkService
 import com.raul.themovieapp.domain.NetworkService
 import com.raul.themovieapp.domain.database.TheMovieAppDatabase
+import com.raul.themovieapp.domain.datasource.GenreLocalDataSource
+import com.raul.themovieapp.domain.datasource.MovieGenreCrossRefLocalDataSource
 import com.raul.themovieapp.domain.datasource.MovieLocalDataSource
 import com.raul.themovieapp.domain.usecase.ObserveMovieDetailsUseCase
 import com.raul.themovieapp.domain.usecase.ObserveMoviesUseCase
@@ -58,10 +62,24 @@ class AppModule(private val application: Application) {
     ): MovieLocalDataSource = RoomMovieLocalDataSource(database.movieDao())
 
     @Provides
+    fun providesMovieGenreCrossRefLocalDataSource(
+        database: TheMovieAppDatabase
+    ): MovieGenreCrossRefLocalDataSource =
+        RoomMovieGenreCrossRefLocalDataSource(database.movieGenreCrossRefDao())
+
+    @Provides
+    fun providesGenreLocalDataSource(
+        database: TheMovieAppDatabase
+    ): GenreLocalDataSource =
+        RoomGenreLocalDataSource(database.genreDao())
+
+    @Provides
     fun providesSyncMoviesUseCase(
         networkService: NetworkService,
-        movieLocalDataSource: MovieLocalDataSource
-    ): SyncMoviesUseCase = SyncMoviesUseCase(networkService, movieLocalDataSource)
+        movieLocalDataSource: MovieLocalDataSource,
+        movieGenreCrossRefLocalDataSource: MovieGenreCrossRefLocalDataSource
+    ): SyncMoviesUseCase =
+        SyncMoviesUseCase(networkService, movieLocalDataSource, movieGenreCrossRefLocalDataSource)
 
     @Provides
     fun providesObserveMoviesUseCase(
@@ -71,8 +89,15 @@ class AppModule(private val application: Application) {
     @Provides
     fun providesSyncMovieDetailsUseCase(
         networkService: NetworkService,
-        movieLocalDataSource: MovieLocalDataSource
-    ): SyncMovieDetailsUseCase = SyncMovieDetailsUseCase(networkService, movieLocalDataSource)
+        movieLocalDataSource: MovieLocalDataSource,
+        movieGenreCrossRefLocalDataSource: MovieGenreCrossRefLocalDataSource,
+        genreLocalDataSource: GenreLocalDataSource
+    ): SyncMovieDetailsUseCase = SyncMovieDetailsUseCase(
+        networkService = networkService,
+        movieLocalDataSource = movieLocalDataSource,
+        movieGenreCrossRefLocalDataSource = movieGenreCrossRefLocalDataSource,
+        genreLocalDataSource = genreLocalDataSource
+    )
 
     @Provides
     fun providesObserveMovieDetailsUseCase(
@@ -83,11 +108,18 @@ class AppModule(private val application: Application) {
     fun providesPopularMoviesViewModelFactory(
         syncMoviesUseCase: SyncMoviesUseCase,
         observeMoviesUseCase: ObserveMoviesUseCase
-    ): PopularMoviesViewModelFactory = PopularMoviesViewModelFactory(syncMoviesUseCase, observeMoviesUseCase)
+    ): PopularMoviesViewModelFactory =
+        PopularMoviesViewModelFactory(syncMoviesUseCase, observeMoviesUseCase)
 
     @Provides
     fun providesMovieDetailsViewModelFactory(
         syncMovieDetailsUseCase: SyncMovieDetailsUseCase,
+        syncMoviesUseCase: SyncMoviesUseCase,
         observeMovieDetailsUseCase: ObserveMovieDetailsUseCase
-    ): MovieDetailsViewModelFactory = MovieDetailsViewModelFactory(syncMovieDetailsUseCase, observeMovieDetailsUseCase)
+    ): MovieDetailsViewModelFactory =
+        MovieDetailsViewModelFactory(
+            syncMovieDetailsUseCase,
+            syncMoviesUseCase,
+            observeMovieDetailsUseCase
+        )
 }

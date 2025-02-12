@@ -121,45 +121,60 @@ class KtorNetworkServiceGetMovieDetailsTest {
         val expectedResult = MovieDetails(
             adult = false,
             backdropPath = "/v9Du2HC3hlknAvGlWhquRbeifwW.jpg",
-        belongsToCollection = null,
-        budget = 120000000,
+            belongsToCollection = null,
+            budget = 120000000,
         genres = listOf(
             Genre(id = 28, name = "Action"),
             Genre(id = 878, name = "Science Fiction"),
             Genre(id = 12, name = "Adventure"),
             Genre(id = 14, name = "Fantasy"),
             Genre(id = 53, name = "Thriller")),
-        homepage = "https://www.kravenmovie.com",
-        id = 539972,
-        imdbId = "tt8790086",
-        originCountry = listOf("US"),
-        originalLanguage = "en",
-        originalTitle = "Kraven the Hunter",
-        overview = "Kraven Kravinoff's complex relationship with his ruthless gangster father, Nikolai, starts him down a path of vengeance with brutal consequences, motivating him to become not only the greatest hunter in the world, but also one of its most feared.",
-        popularity = 2600.343,
-        posterPath = "/i47IUSsN126K11JUzqQIOi1Mg1M.jpg",
-        productionCompanies = listOf(
-            ProductionCompany(id = 5, logoPath = "/71BqEFAF4V3qjjMPCpLuyJFB9A.png", name = "Columbia Pictures", originCountry = "US"),
-            ProductionCompany(id = 53462, logoPath = "/nx8B3Phlcse02w86RW4CJqzCnfL.png", name = "Matt Tolmach Productions", originCountry = "US"),
-            ProductionCompany(id = 14439, logoPath = null, name = "Arad Productions", originCountry = "US")
+            homepage = "https://www.kravenmovie.com",
+            id = 539972,
+            imdbId = "tt8790086",
+            originCountry = listOf("US"),
+            originalLanguage = "en",
+            originalTitle = "Kraven the Hunter",
+            overview = "Kraven Kravinoff's complex relationship with his ruthless gangster father, Nikolai, starts him down a path of vengeance with brutal consequences, motivating him to become not only the greatest hunter in the world, but also one of its most feared.",
+            popularity = 2600.343,
+            posterPath = "/i47IUSsN126K11JUzqQIOi1Mg1M.jpg",
+            productionCompanies = listOf(
+                ProductionCompany(
+                    id = 5,
+                    logoPath = "/71BqEFAF4V3qjjMPCpLuyJFB9A.png",
+                    name = "Columbia Pictures",
+                    originCountry = "US"
+                ),
+                ProductionCompany(
+                    id = 53462,
+                    logoPath = "/nx8B3Phlcse02w86RW4CJqzCnfL.png",
+                    name = "Matt Tolmach Productions",
+                    originCountry = "US"
+                ),
+                ProductionCompany(
+                    id = 14439,
+                    logoPath = null,
+                    name = "Arad Productions",
+                    originCountry = "US"
+                )
             ),
-        productionCountries = listOf(
-            ProductionCountry(iso31661 = "US", name = "United States of America")
-        ),
-        releaseDate = LocalDate.parse("2024-12-11"),
-        revenue = 59184643,
-        runtime = 127,
-        spokenLanguages = listOf(
-            SpokenLanguage(englishName = "English", iso6391 = "en", name = "English"),
-            SpokenLanguage(englishName = "Russian", iso6391 = "ru", name = "Pусский"),
-            SpokenLanguage(englishName = "Turkish", iso6391 = "tr", name = "Türkçe")
-        ),
-        status = "Released",
-        tagline = "Villains aren't born. They're made.",
-        title = "Kraven the Hunter",
-        video = false,
-        voteAverage = 6.6,
-        voteCount = 881
+            productionCountries = listOf(
+                ProductionCountry(iso31661 = "US", name = "United States of America")
+            ),
+            releaseDate = LocalDate.parse("2024-12-11"),
+            revenue = 59184643,
+            runtime = 127,
+            spokenLanguages = listOf(
+                SpokenLanguage(englishName = "English", iso6391 = "en", name = "English"),
+                SpokenLanguage(englishName = "Russian", iso6391 = "ru", name = "Pусский"),
+                SpokenLanguage(englishName = "Turkish", iso6391 = "tr", name = "Türkçe")
+            ),
+            status = "Released",
+            tagline = "Villains aren't born. They're made.",
+            title = "Kraven the Hunter",
+            video = false,
+            voteAverage = 6.6,
+            voteCount = 881
         ).right()
 
         networkService.getMovieDetails(539972) shouldEqual expectedResult

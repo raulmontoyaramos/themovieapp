@@ -31,11 +31,6 @@ data class MovieDetails(
     val voteCount: Int
 )
 
-data class Genre(
-    val id: Int,
-    val name: String
-)
-
 data class ProductionCompany(
     val id: Int,
     val logoPath: String?,

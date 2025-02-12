@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.raul.themovieapp.data.database.model.MovieEntity
+import com.raul.themovieapp.data.database.model.MovieWithGenres
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -12,12 +14,14 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovies(movies: List<MovieEntity>)
 
-    @Query("SELECT * FROM movies ORDER BY title ASC")
-    fun getAllMovies(): Flow<List<MovieEntity>>
+    @Transaction
+    @Query("SELECT * FROM movies")
+    fun getAllMovies(): Flow<List<MovieWithGenres>>
 
-    @Query("SELECT * FROM movies WHERE id = :id")
-    fun getMovieById(id: Int): Flow<MovieEntity?>
-
-    @Query("UPDATE movies SET runtime = :runtime WHERE id = :id")
+    @Query("UPDATE movies SET runtime = :runtime WHERE movieId = :id")
     suspend fun updateMovie(id: Int, runtime: Int)
+
+    @Transaction
+    @Query("SELECT * FROM movies WHERE movieId = :movieId")
+    fun getMovieWithGenres(movieId: Int): Flow<MovieWithGenres?>
 }

@@ -52,26 +52,29 @@ data class NetworkMovie(
     val voteCount: Int
 )
 
-internal fun NetworkMovies.toDomain(): Either<Throwable, List<Movie>> =
+internal fun NetworkMovies.toDomain(): Either<Throwable, List<Pair<Movie, List<Int>>>> =
     either { results.map { it.toDomain().bind() } }
 
-internal fun NetworkMovie.toDomain(): Either<Throwable, Movie> =
+internal fun NetworkMovie.toDomain(): Either<Throwable, Pair<Movie, List<Int>>> =
     either {
-        Movie(
-            adult = adult,
-            backdropPath = backdropPath,
-            genreIds = genreIds,
-            id = id,
-            originalLanguage = originalLanguage,
-            originalTitle = originalTitle,
-            overview = overview,
-            popularity = popularity,
-            posterPath = posterPath,
-            releaseDate = Either.catch { LocalDate.parse(releaseDate) }.bind(),
-            runtime = null,
-            title = title,
-            video = video,
-            voteAverage = voteAverage,
-            voteCount = voteCount
+        Pair(
+            first = Movie(
+                adult = adult,
+                backdropPath = backdropPath,
+                id = id,
+                originalLanguage = originalLanguage,
+                originalTitle = originalTitle,
+                overview = overview,
+                popularity = popularity,
+                posterPath = posterPath,
+                releaseDate = Either.catch { LocalDate.parse(releaseDate) }.bind(),
+                runtime = null,
+                title = title,
+                video = video,
+                voteAverage = voteAverage,
+                voteCount = voteCount,
+                genres = emptyList(),
+            ),
+            second = genreIds
         )
     }

@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import com.raul.themovieapp.domain.model.Genre
 import com.raul.themovieapp.domain.model.Movie
 import com.raul.themovieapp.presentation.PopularMoviesViewState
 import java.time.LocalDate
@@ -258,13 +259,7 @@ fun SuccessScreenPreview() {
                 Movie(
                     adult = false,
                     backdropPath = "/rDa3SfEijeRNCWtHQZCwfbGxYvR.jpg",
-                    genreIds = listOf(
-                        28,
-                        878,
-                        12,
-                        14,
-                        53
-                    ),
+                    genres = listOf(Genre(1, "Drama")),
                     id = 539972,
                     originalLanguage = "en",
                     originalTitle = "Kraven the Hunter",

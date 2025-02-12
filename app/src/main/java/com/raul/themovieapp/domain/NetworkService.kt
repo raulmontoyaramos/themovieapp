@@ -8,7 +8,7 @@ import com.raul.themovieapp.domain.model.Video
 
 interface NetworkService {
 
-    suspend fun getPopularMovies(): Either<NetworkError, List<Movie>>
+    suspend fun getPopularMovies(): Either<NetworkError, List<Pair<Movie, List<Int>>>>
 
     suspend fun getMovieDetails(id: Int): Either<NetworkError, MovieDetails>
 

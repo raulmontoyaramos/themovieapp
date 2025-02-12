@@ -49,6 +49,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.raul.themovieapp.domain.model.Cast
+import com.raul.themovieapp.domain.model.Genre
 import com.raul.themovieapp.domain.model.Movie
 import com.raul.themovieapp.presentation.MovieDetailsViewState
 import com.raul.themovieapp.utils.formattedYear
@@ -160,14 +161,14 @@ fun ItemTitle(movie: Movie) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
     ) {
-//        val concatenatedGenres: String = movie.genres.joinToString(", ") { it.name }
-//        Text(
-//            text = concatenatedGenres,
-//            style = MaterialTheme.typography.bodyMedium,
-//            color = Color.Gray,
-//            maxLines = 1,
-//            overflow = TextOverflow.Ellipsis
-//        )
+        val concatenatedGenres: String = movie.genres.joinToString(", ") { it.name }
+        Text(
+            text = concatenatedGenres,
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Gray,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 
     Spacer(modifier = Modifier.height(10.dp))
@@ -349,7 +350,6 @@ fun MovieDetailsScreenPreview() {
         movie = Movie(
             adult = false,
             backdropPath = "/v9Du2HC3hlknAvGlWhquRbeifwW.jpg",
-            genreIds = emptyList(),
             id = 539972,
             originalLanguage = "en",
             originalTitle = "Kraven the Hunter",
@@ -361,7 +361,8 @@ fun MovieDetailsScreenPreview() {
             title = "Kraven the Hunter",
             video = false,
             voteAverage = 6.6,
-            voteCount = 881
+            voteCount = 881,
+            genres = listOf(Genre(1, "Drama"))
         ),
         cast = listOf(
             Cast(

@@ -20,7 +20,7 @@ class KtorNetworkService(
     private val client: HttpClient
 ) : NetworkService {
 
-    override suspend fun getPopularMovies(): Either<NetworkError, List<Movie>> {
+    override suspend fun getPopularMovies(): Either<NetworkError, List<Pair<Movie, List<Int>>>> {
         val response = client.safeGet("movie/popular?language=en-US&page=1")
 
         return when (response.status.value) {

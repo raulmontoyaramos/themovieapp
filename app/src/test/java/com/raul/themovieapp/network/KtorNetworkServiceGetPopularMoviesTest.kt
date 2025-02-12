@@ -5,6 +5,7 @@ import arrow.core.right
 import com.raul.themovieapp.KtorTestRule
 import com.raul.themovieapp.data.network.KtorNetworkService
 import com.raul.themovieapp.domain.NetworkError
+import com.raul.themovieapp.domain.model.Genre
 import com.raul.themovieapp.domain.model.Movie
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -25,13 +26,28 @@ class KtorNetworkServiceGetPopularMoviesTest {
                 {
                   "adult": false,
                   "backdrop_path": "/rDa3SfEijeRNCWtHQZCwfbGxYvR.jpg",
-                  "genre_ids": [
-                    28,
-                    878,
-                    12,
-                    14,
-                    53
-                  ],
+               "genres": [
+                {
+                  "id": 28,
+                  "name": "Action"
+                },
+                {
+                  "id": 878,
+                  "name": "Science Fiction"
+                },
+                {
+                  "id": 12,
+                  "name": "Adventure"
+                },
+                {
+                  "id": 14,
+                  "name": "Fantasy"
+                },
+                {
+                  "id": 53,
+                  "name": "Thriller"
+                }
+              ],
                   "id": 539972,
                   "original_language": "en",
                   "original_title": "Kraven the Hunter",
@@ -57,12 +73,12 @@ class KtorNetworkServiceGetPopularMoviesTest {
             Movie(
                 adult = false,
                 backdropPath = "/rDa3SfEijeRNCWtHQZCwfbGxYvR.jpg",
-                genreIds = listOf(
-                    28,
-                    878,
-                    12,
-                    14,
-                    53
+                genres = listOf(
+                    Genre(id = 28, name = "Action"),
+                    Genre(id = 878, name = "Science Fiction"),
+                    Genre(id = 12, name = "Adventure"),
+                    Genre(id = 14, name = "Fantasy"),
+                    Genre(id = 53, name = "Thriller")
                 ),
                 id = 539972,
                 originalLanguage = "en",
@@ -97,13 +113,28 @@ class KtorNetworkServiceGetPopularMoviesTest {
                 {
                   "adult": false,
                   "backdrop_path": "/rDa3SfEijeRNCWtHQZCwfbGxYvR.jpg",
-                  "genre_ids": [
-                    28,
-                    878,
-                    12,
-                    14,
-                    53
-                  ],
+                                "genres": [
+                                  {
+                                    "id": 28,
+                                    "name": "Action"
+                                  },
+                                  {
+                                    "id": 878,
+                                    "name": "Science Fiction"
+                                  },
+                                  {
+                                    "id": 12,
+                                    "name": "Adventure"
+                                  },
+                                  {
+                                    "id": 14,
+                                    "name": "Fantasy"
+                                  },
+                                  {
+                                    "id": 53,
+                                    "name": "Thriller"
+                                  }
+                                ],
                   "id": 539972,
                   "original_language": "en",
                   "original_title": "Kraven the Hunter",

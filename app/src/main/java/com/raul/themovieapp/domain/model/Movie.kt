@@ -6,7 +6,7 @@ data class Movie(
     val id: Int,
     val adult: Boolean,
     val backdropPath: String,
-    val genreIds: List<Int>,
+    val genres: List<Genre>,
     val originalLanguage: String,
     val originalTitle: String,
     val overview: String,
@@ -18,4 +18,9 @@ data class Movie(
     val video: Boolean,
     val voteAverage: Double,
     val voteCount: Int
+)
+
+data class Genre(
+    val id: Int,
+    val name: String
 )
