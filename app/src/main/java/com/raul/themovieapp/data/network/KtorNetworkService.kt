@@ -3,7 +3,9 @@ package com.raul.themovieapp.data.network
 import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.left
+import arrow.core.right
 import com.raul.themovieapp.data.network.model.NetworkCredits
+import com.raul.themovieapp.data.network.model.NetworkGenres
 import com.raul.themovieapp.data.network.model.NetworkMovieDetail
 import com.raul.themovieapp.data.network.model.NetworkMovies
 import com.raul.themovieapp.data.network.model.NetworkVideos
@@ -11,6 +13,7 @@ import com.raul.themovieapp.data.network.model.toDomain
 import com.raul.themovieapp.domain.NetworkError
 import com.raul.themovieapp.domain.NetworkService
 import com.raul.themovieapp.domain.model.Cast
+import com.raul.themovieapp.domain.model.Genre
 import com.raul.themovieapp.domain.model.Movie
 import com.raul.themovieapp.domain.model.MovieDetails
 import com.raul.themovieapp.domain.model.Video
@@ -62,6 +65,18 @@ class KtorNetworkService(
         return when(response.status.value) {
             200 -> response.safeReceive(NetworkCredits.serializer())
                 .flatMap { it.toDomain() }
+                .mapLeft { NetworkError.DeserialisationError }
+
+            else -> NetworkError.UnknownError.left()
+        }
+    }
+
+    override suspend fun getGenres(): Either<NetworkError, List<Genre>> {
+        val response = client.safeGet("genre/movie/list?language=en")
+
+        return when (response.status.value) {
+            200 -> response.safeReceive(NetworkGenres.serializer())
+                .flatMap<Throwable, NetworkGenres, List<Genre>> { it.toDomain().right() }
                 .mapLeft { NetworkError.DeserialisationError }
 
             else -> NetworkError.UnknownError.left()

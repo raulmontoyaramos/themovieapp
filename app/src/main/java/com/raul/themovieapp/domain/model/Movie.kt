@@ -20,7 +20,3 @@ data class Movie(
     val voteCount: Int
 )
 
-data class Genre(
-    val id: Int,
-    val name: String
-)

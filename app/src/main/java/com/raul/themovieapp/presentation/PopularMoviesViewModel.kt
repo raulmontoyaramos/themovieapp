@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raul.themovieapp.domain.model.Movie
 import com.raul.themovieapp.domain.usecase.ObserveMoviesUseCase
+import com.raul.themovieapp.domain.usecase.SyncGenresUseCase
 import com.raul.themovieapp.domain.usecase.SyncMoviesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,8 @@ import kotlinx.coroutines.withContext
 
 class PopularMoviesViewModel(
     val syncMoviesUseCase: SyncMoviesUseCase,
-    val observeMoviesUseCase: ObserveMoviesUseCase
+    val observeMoviesUseCase: ObserveMoviesUseCase,
+    val syncGenresUseCase: SyncGenresUseCase
 ) : ViewModel() {
 
     val viewState = MutableStateFlow(
@@ -29,15 +31,31 @@ class PopularMoviesViewModel(
     )
 
     init {
-        syncMovies()
+        syncGenres()
+    }
+
+    private fun syncGenres() {
+        viewModelScope.launch {
+            val resultSync = withContext(Dispatchers.IO) {
+                syncGenresUseCase.run()
+            }
+            resultSync.fold(
+                ifLeft = {
+                    println("SyncGenresUseCase - Error")
+                },
+                ifRight = {
+                    syncMovies()
+                }
+            )
+        }
     }
 
     private fun syncMovies() {
         viewModelScope.launch {
-            val resultsync = withContext(Dispatchers.IO) {
+            val resultSync = withContext(Dispatchers.IO) {
                 syncMoviesUseCase.run()
             }
-            resultsync.fold(
+            resultSync.fold(
                 ifLeft = {
                     println("SyncMoviesUseCase - Error")
                     viewState.update {
@@ -73,12 +91,14 @@ data class PopularMoviesViewState(
 
 class PopularMoviesViewModelFactory(
     private val syncMoviesUseCase: SyncMoviesUseCase,
-    private val observeMoviesUseCase: ObserveMoviesUseCase
+    private val observeMoviesUseCase: ObserveMoviesUseCase,
+    private val syncGenresUseCase: SyncGenresUseCase
 ) {
     internal fun create() = viewModelFactory {
         PopularMoviesViewModel(
             syncMoviesUseCase = syncMoviesUseCase,
-            observeMoviesUseCase = observeMoviesUseCase
+            observeMoviesUseCase = observeMoviesUseCase,
+            syncGenresUseCase = syncGenresUseCase
         )
     }
 }

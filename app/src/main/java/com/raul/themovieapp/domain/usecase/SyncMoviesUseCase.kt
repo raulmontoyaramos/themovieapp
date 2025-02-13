@@ -14,10 +14,10 @@ class SyncMoviesUseCase(
         networkService.getPopularMovies()
             .map { movieList: List<Pair<Movie, List<Int>>> ->
                 movieLocalDataSource.insertMovies(movieList.map { it.first })
-//                movieList.map { (movie, genreIds) ->
-//                    genreIds.map {
-//                        movieGenreCrossRefLocalDataSource.insertMovieGenreIds(movie.id, it)
-//                    }
-//                }
+                movieList.map { (movie, genreIds) ->
+                    genreIds.map {
+                        movieGenreCrossRefLocalDataSource.insertMovieGenreIds(movie.id, it)
+                    }
+                }
             }
 }

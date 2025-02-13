@@ -2,7 +2,6 @@ package com.raul.themovieapp.data.network.model
 
 import arrow.core.Either
 import arrow.core.raise.either
-import com.raul.themovieapp.domain.model.Genre
 import com.raul.themovieapp.domain.model.MovieDetails
 import com.raul.themovieapp.domain.model.ProductionCompany
 import com.raul.themovieapp.domain.model.ProductionCountry
@@ -68,14 +67,6 @@ data class NetworkMovieDetail(
 )
 
 @Serializable
-data class NetworkGenre(
-    @SerialName("id")
-    val id: Int,
-    @SerialName("name")
-    val name: String
-)
-
-@Serializable
 data class NetworkProductionCompany(
     @SerialName("id")
     val id: Int,
@@ -105,32 +96,26 @@ data class NetworkSpokenLanguage(
     val name: String
 )
 
-internal fun NetworkGenre.toDomain(): Genre =
-        Genre(
-            id = id,
-            name = name
-        )
-
 internal fun NetworkProductionCompany.toDomain(): ProductionCompany =
-        ProductionCompany(
-            id = id,
-            logoPath = logoPath,
-            name = name,
-            originCountry = originCountry
-        )
+    ProductionCompany(
+        id = id,
+        logoPath = logoPath,
+        name = name,
+        originCountry = originCountry
+    )
 
 internal fun NetworkProductionCountry.toDomain(): ProductionCountry =
-        ProductionCountry(
-            iso31661 = iso31661,
-            name = name
-        )
+    ProductionCountry(
+        iso31661 = iso31661,
+        name = name
+    )
 
 internal fun NetworkSpokenLanguage.toDomain(): SpokenLanguage =
-        SpokenLanguage(
-            englishName = englishName,
-            iso6391 = iso6391,
-            name = name
-        )
+    SpokenLanguage(
+        englishName = englishName,
+        iso6391 = iso6391,
+        name = name
+    )
 
 
 internal fun NetworkMovieDetail.toDomain(): Either<Throwable, MovieDetails> =

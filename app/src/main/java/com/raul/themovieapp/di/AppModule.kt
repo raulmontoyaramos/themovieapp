@@ -13,6 +13,7 @@ import com.raul.themovieapp.domain.datasource.MovieGenreCrossRefLocalDataSource
 import com.raul.themovieapp.domain.datasource.MovieLocalDataSource
 import com.raul.themovieapp.domain.usecase.ObserveMovieDetailsUseCase
 import com.raul.themovieapp.domain.usecase.ObserveMoviesUseCase
+import com.raul.themovieapp.domain.usecase.SyncGenresUseCase
 import com.raul.themovieapp.domain.usecase.SyncMovieDetailsUseCase
 import com.raul.themovieapp.domain.usecase.SyncMoviesUseCase
 import com.raul.themovieapp.presentation.MovieDetailsViewModelFactory
@@ -100,6 +101,15 @@ class AppModule(private val application: Application) {
     )
 
     @Provides
+    fun providesSyncGenresUseCase(
+        networkService: NetworkService,
+        genreLocalDataSource: GenreLocalDataSource,
+    ): SyncGenresUseCase = SyncGenresUseCase(
+        networkService = networkService,
+        genreLocalDataSource = genreLocalDataSource
+    )
+
+    @Provides
     fun providesObserveMovieDetailsUseCase(
         movieLocalDataSource: MovieLocalDataSource
     ): ObserveMovieDetailsUseCase = ObserveMovieDetailsUseCase(movieLocalDataSource)
@@ -107,9 +117,14 @@ class AppModule(private val application: Application) {
     @Provides
     fun providesPopularMoviesViewModelFactory(
         syncMoviesUseCase: SyncMoviesUseCase,
-        observeMoviesUseCase: ObserveMoviesUseCase
+        observeMoviesUseCase: ObserveMoviesUseCase,
+        syncGenresUseCase: SyncGenresUseCase
     ): PopularMoviesViewModelFactory =
-        PopularMoviesViewModelFactory(syncMoviesUseCase, observeMoviesUseCase)
+        PopularMoviesViewModelFactory(
+            syncMoviesUseCase = syncMoviesUseCase,
+            observeMoviesUseCase = observeMoviesUseCase,
+            syncGenresUseCase = syncGenresUseCase
+        )
 
     @Provides
     fun providesMovieDetailsViewModelFactory(
