@@ -47,7 +47,7 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun providesStarWarsDatabase(): TheMovieAppDatabase =
+    fun providesTheMovieAppDatabase(): TheMovieAppDatabase =
         Room.databaseBuilder(application, TheMovieAppDatabase::class.java, "movies_database")
             .fallbackToDestructiveMigration()
             .build()

@@ -45,7 +45,8 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PopularMoviesScreen(
-    viewState: PopularMoviesViewState
+    viewState: PopularMoviesViewState,
+    onMovieClicked: (Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -69,7 +70,8 @@ fun PopularMoviesScreen(
 
                 else ->
                     MoviesGrid(
-                        viewState = viewState
+                        movies = viewState.movies,
+                        onMovieClick = onMovieClicked
                     )
             }
         }
@@ -79,16 +81,18 @@ fun PopularMoviesScreen(
 
 @Composable
 fun MoviesGrid(
-    viewState: PopularMoviesViewState
+    movies: List<Movie>,
+    onMovieClick: (Int) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         columns = GridCells.Fixed(3),
         content = {
-            items(viewState.movies) { movie ->
+            items(movies, key = { movie -> movie.id }) { movie ->
                 MovieCard(
-                    movie = movie
+                    movie = movie,
+                    onCardClick = { onMovieClick(movie.id) }
                 )
             }
         })
@@ -170,13 +174,15 @@ fun Empty(subject: String) {
 
 @Composable
 fun MovieCard(
-    movie: Movie
+    movie: Movie,
+    onCardClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .padding(10.dp)
             .background(color = Color.White),
-        shape = RoundedCornerShape(10.dp)
+        shape = RoundedCornerShape(10.dp),
+        onClick = onCardClick
     ) {
         Column {
             val data = "https://image.tmdb.org/t/p/original" + movie.posterPath
@@ -222,7 +228,8 @@ fun LoadingScreenPreview() {
             movies = emptyList(),
             isLoading = true,
             isError = false
-        )
+        ),
+        onMovieClicked = { }
     )
 }
 
@@ -234,7 +241,8 @@ fun ErrorScreenPreview() {
             movies = emptyList(),
             isLoading = false,
             isError = true
-        )
+        ),
+        onMovieClicked = { }
     )
 }
 
@@ -246,7 +254,8 @@ fun EmptyScreenPreview() {
             movies = emptyList(),
             isLoading = false,
             isError = false
-        )
+        ),
+        onMovieClicked = { }
     )
 }
 
@@ -276,6 +285,7 @@ fun SuccessScreenPreview() {
             ),
             isLoading = false,
             isError = false
-        )
+        ),
+        onMovieClicked = { }
     )
 }

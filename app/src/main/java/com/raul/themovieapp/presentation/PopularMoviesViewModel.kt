@@ -2,6 +2,8 @@ package com.raul.themovieapp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import com.raul.themovieapp.MovieDetails
 import com.raul.themovieapp.domain.model.Movie
 import com.raul.themovieapp.domain.usecase.ObserveMoviesUseCase
 import com.raul.themovieapp.domain.usecase.SyncGenresUseCase
@@ -19,7 +21,8 @@ import kotlinx.coroutines.withContext
 class PopularMoviesViewModel(
     val syncMoviesUseCase: SyncMoviesUseCase,
     val observeMoviesUseCase: ObserveMoviesUseCase,
-    val syncGenresUseCase: SyncGenresUseCase
+    val syncGenresUseCase: SyncGenresUseCase,
+    val navController: NavController
 ) : ViewModel() {
 
     val viewState = MutableStateFlow(
@@ -81,7 +84,14 @@ class PopularMoviesViewModel(
             )
         }
     }
+
+    fun onMovieClicked(movieId: Int) {
+        println("PopularMoviesViewModel - onMovieClicked - movieId = $movieId")
+        navController.navigate(MovieDetails(movieId))
+    }
 }
+
+
 
 data class PopularMoviesViewState(
     val movies: List<Movie>,
@@ -94,11 +104,14 @@ class PopularMoviesViewModelFactory(
     private val observeMoviesUseCase: ObserveMoviesUseCase,
     private val syncGenresUseCase: SyncGenresUseCase
 ) {
-    internal fun create() = viewModelFactory {
+    internal fun create(
+        navController: NavController
+    ) = viewModelFactory {
         PopularMoviesViewModel(
             syncMoviesUseCase = syncMoviesUseCase,
             observeMoviesUseCase = observeMoviesUseCase,
-            syncGenresUseCase = syncGenresUseCase
+            syncGenresUseCase = syncGenresUseCase,
+            navController = navController
         )
     }
 }

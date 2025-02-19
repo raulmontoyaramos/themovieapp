@@ -2,6 +2,7 @@ package com.raul.themovieapp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import arrow.core.Either
 import com.raul.themovieapp.domain.NetworkError
 import com.raul.themovieapp.domain.model.Cast
@@ -23,7 +24,8 @@ class MovieDetailsViewModel(
     val syncMovieDetailsUseCase: SyncMovieDetailsUseCase,
     val syncMoviesUseCase: SyncMoviesUseCase,
     observeMovieDetailsUseCase: ObserveMovieDetailsUseCase,
-    id: Int
+    id: Int,
+    val navController: NavController
 ) : ViewModel() {
 
     val viewState = MutableStateFlow(
@@ -70,6 +72,8 @@ class MovieDetailsViewModel(
             )
         }
     }
+
+    fun onBackButtonClicked() = navController.navigateUp()
 }
 
 data class MovieDetailsViewState(
@@ -83,13 +87,15 @@ class MovieDetailsViewModelFactory(
     private val observeMoviesUseCase: ObserveMovieDetailsUseCase
 ) {
     internal fun create(
-        id: Int
+        id: Int,
+        navController: NavController
     ) = viewModelFactory {
         MovieDetailsViewModel(
             syncMovieDetailsUseCase = syncMovieDetailsUseCase,
             syncMoviesUseCase = syncMoviesUseCase,
             observeMovieDetailsUseCase = observeMoviesUseCase,
-            id = id
+            id = id,
+            navController = navController
         )
     }
 }
