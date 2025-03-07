@@ -90,14 +90,10 @@ class AppModule(private val application: Application) {
     @Provides
     fun providesSyncMovieDetailsUseCase(
         networkService: NetworkService,
-        movieLocalDataSource: MovieLocalDataSource,
-        movieGenreCrossRefLocalDataSource: MovieGenreCrossRefLocalDataSource,
-        genreLocalDataSource: GenreLocalDataSource
+        movieLocalDataSource: MovieLocalDataSource
     ): SyncMovieDetailsUseCase = SyncMovieDetailsUseCase(
         networkService = networkService,
-        movieLocalDataSource = movieLocalDataSource,
-        movieGenreCrossRefLocalDataSource = movieGenreCrossRefLocalDataSource,
-        genreLocalDataSource = genreLocalDataSource
+        movieLocalDataSource = movieLocalDataSource
     )
 
     @Provides

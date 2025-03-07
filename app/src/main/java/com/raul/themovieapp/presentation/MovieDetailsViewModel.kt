@@ -36,11 +36,7 @@ class MovieDetailsViewModel(
     )
 
     init {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                syncMoviesUseCase.run()
-            }.fold({}, { syncMovieDetails(id) })
-        }
+        syncMovieDetails(id)
         observeMovieDetailsUseCase.observe(id)
             .flowOn(Dispatchers.IO)
             .catch { println("Error ${it.message}") }
